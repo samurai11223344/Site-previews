@@ -154,9 +154,15 @@
     .gallery{height:300vh}
   }
   @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal,.split .w>span{opacity:1;transform:none}}
+
+  .center-hero .hero-inner{text-align:center;display:flex;flex-direction:column;align-items:center}
+  .center-hero h1{margin:0 auto}
+  .center-hero .hero p.lead{margin-left:auto;margin-right:auto}
+  .center-hero .ctas{justify-content:center}
+  .center-hero .scroll-cue{display:none}
 </style>
 </head>
-<body>
+<body class="center-hero">
 
 <div class="concept"><b>Concept preview</b> designed for St John's Plumbing Heating & Bathrooms Ltd · not an official website</div>
 
@@ -355,6 +361,8 @@ if(matchMedia('(hover:hover)').matches)document.querySelectorAll('.tilt').forEac
 <script type="module">
 import * as THREE from 'three';
 import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+const SCENE='water',CENTER=true;
+const ACC=new THREE.Color('#c9a24a');
 
 const canvas=document.getElementById('three'),hero=document.getElementById('top');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
@@ -364,72 +372,181 @@ const scene=new THREE.Scene();
 const pmrem=new THREE.PMREMGenerator(renderer);
 scene.environment=pmrem.fromScene(new RoomEnvironment(),.04).texture;pmrem.dispose();
 const camera=new THREE.PerspectiveCamera(35,1,.1,100);camera.position.set(0,0,14);
-const key=new THREE.DirectionalLight(0xffd2a8,2.2);key.position.set(5,6,6);scene.add(key);
-const rim=new THREE.PointLight(0x5cc8ff,40,30);rim.position.set(-6,-2,4);scene.add(rim);
-
-const copper=new THREE.MeshStandardMaterial({color:0xb8913a,metalness:1,roughness:.24});
-const brass=new THREE.MeshStandardMaterial({color:0xe0b070,metalness:1,roughness:.18});
-const glass=new THREE.MeshStandardMaterial({color:0x9fdcff,metalness:.2,roughness:.05,transparent:true,opacity:.22,depthWrite:false,envMapIntensity:2});
-const waterMat=new THREE.MeshStandardMaterial({color:0xa8e4ff,metalness:.1,roughness:.05,transparent:true,opacity:.85,envMapIntensity:2});
-
+const key=new THREE.DirectionalLight(0xfff0e0,2.2);key.position.set(5,6,6);scene.add(key);
+const rim=new THREE.PointLight(ACC,40,30);rim.position.set(-6,-2,4);scene.add(rim);
 const rig=new THREE.Group();scene.add(rig);
 const V=(x,y,z)=>new THREE.Vector3(x,y,z);
-function run(pts,r,mat,bend=.6){
-  const path=new THREE.CurvePath();
-  for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1];
-    const s=i===0?a:a.clone().lerp(b,bend/a.distanceTo(b));
-    const e=i===pts.length-2?b:b.clone().lerp(a,bend/a.distanceTo(b));
-    path.add(new THREE.LineCurve3(s,e));
-    if(i<pts.length-2){const n=pts[i+2];path.add(new THREE.QuadraticBezierCurve3(e,b,b.clone().lerp(n,bend/b.distanceTo(n))))}}
-  rig.add(new THREE.Mesh(new THREE.TubeGeometry(path,220,r,20,false),mat));
-  const cg=new THREE.CylinderGeometry(r*1.45,r*1.45,r*2.4,24);
-  [[pts[0],pts[1]],[pts[pts.length-1],pts[pts.length-2]]].forEach(([p,q])=>{const c=new THREE.Mesh(cg,brass);
-    c.position.copy(p);c.quaternion.setFromUnitVectors(V(0,1,0),q.clone().sub(p).normalize());rig.add(c)});
-  return path}
-[[V(-6,-3,0),V(-2,-3,0),V(-2,1,0),V(2,1,0),V(2,4,-1)],
- [V(-5,3,-2),V(-1,3,-2),V(-1,-1,-2),V(3,-1,-2),V(3,-4,-2)],
- [V(0,-5,1),V(0,-2,1),V(4,-2,1),V(4,2,1),V(6,2,1)]].forEach((p,i)=>run(p,i===1?.22:.3,copper));
-const glassPath=run([V(-4,0,2),V(1,0,2),V(1,3,2),V(5,3,2)],.34,glass);
+const metal=(c,r=.24)=>new THREE.MeshStandardMaterial({color:c,metalness:1,roughness:r});
+const base={x:.12,y:-.35};
+function points(n,size,color,opacity=.9){const g=new THREE.BufferGeometry(),p=new Float32Array(n*3);g.setAttribute('position',new THREE.BufferAttribute(p,3));
+  const m=new THREE.Points(g,new THREE.PointsMaterial({color,size,transparent:true,opacity,blending:THREE.AdditiveBlending,depthWrite:false}));return {m,p,g}}
 
-const wheel=new THREE.Group();
-wheel.add(new THREE.Mesh(new THREE.TorusGeometry(.7,.08,16,48),new THREE.MeshStandardMaterial({color:0xb3261e,metalness:.6,roughness:.35})));
-const spoke=new THREE.CylinderGeometry(.05,.05,1.4,10);
-for(let i=0;i<4;i++){const s=new THREE.Mesh(spoke,brass);s.rotation.z=i*Math.PI/4;wheel.add(s)}
-wheel.position.set(-2,-1,.6);rig.add(wheel);
+/* 1 — copper pipe network with flowing water */
+function pipes(){
+  const copper=metal(0xc07a43),brass=metal(0xe0b070,.18);
+  const glass=new THREE.MeshStandardMaterial({color:0x9fdcff,metalness:.2,roughness:.05,transparent:true,opacity:.22,depthWrite:false,envMapIntensity:2});
+  const waterMat=new THREE.MeshStandardMaterial({color:0xa8e4ff,metalness:.1,roughness:.05,transparent:true,opacity:.85,envMapIntensity:2});
+  function run(pts,r,mat,bend=.6){const path=new THREE.CurvePath();
+    for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1];
+      const s=i===0?a:a.clone().lerp(b,bend/a.distanceTo(b));const e=i===pts.length-2?b:b.clone().lerp(a,bend/a.distanceTo(b));
+      path.add(new THREE.LineCurve3(s,e));if(i<pts.length-2){const n=pts[i+2];path.add(new THREE.QuadraticBezierCurve3(e,b,b.clone().lerp(n,bend/b.distanceTo(n))))}}
+    rig.add(new THREE.Mesh(new THREE.TubeGeometry(path,220,r,20,false),mat));
+    const cg=new THREE.CylinderGeometry(r*1.45,r*1.45,r*2.4,24);
+    [[pts[0],pts[1]],[pts[pts.length-1],pts[pts.length-2]]].forEach(([p,q])=>{const c=new THREE.Mesh(cg,brass);c.position.copy(p);c.quaternion.setFromUnitVectors(V(0,1,0),q.clone().sub(p).normalize());rig.add(c)});
+    return path}
+  [[V(-6,-3,0),V(-2,-3,0),V(-2,1,0),V(2,1,0),V(2,4,-1)],[V(-5,3,-2),V(-1,3,-2),V(-1,-1,-2),V(3,-1,-2),V(3,-4,-2)],[V(0,-5,1),V(0,-2,1),V(4,-2,1),V(4,2,1),V(6,2,1)]].forEach((p,i)=>run(p,i===1?.22:.3,copper));
+  const glassPath=run([V(-4,0,2),V(1,0,2),V(1,3,2),V(5,3,2)],.34,glass);
+  const wheel=new THREE.Group();wheel.add(new THREE.Mesh(new THREE.TorusGeometry(.7,.08,16,48),new THREE.MeshStandardMaterial({color:0xb3261e,metalness:.6,roughness:.35})));
+  const spoke=new THREE.CylinderGeometry(.05,.05,1.4,10);for(let i=0;i<4;i++){const s=new THREE.Mesh(spoke,brass);s.rotation.z=i*Math.PI/4;wheel.add(s)}
+  wheel.position.set(-2,-1,.6);rig.add(wheel);
+  const S=800,samples=glassPath.getSpacedPoints(S-1),N=220,w=points(N,.09,0x7fd8ff),off=new Float32Array(N),jit=new Float32Array(N*3);
+  for(let i=0;i<N;i++){off[i]=Math.random();for(let k=0;k<3;k++)jit[i*3+k]=(Math.random()-.5)*.26}rig.add(w.m);
+  const dropGeo=new THREE.SphereGeometry(.09,12,12),drips=Array.from({length:6},(_,i)=>{const d=new THREE.Mesh(dropGeo,waterMat);d.userData.t=i/6;rig.add(d);return d});
+  return t=>{wheel.rotation.z=t*.8;
+    for(let i=0;i<N;i++){const p=samples[Math.floor(((off[i]+t*.12)%1)*(S-1))];w.p[i*3]=p.x+jit[i*3];w.p[i*3+1]=p.y+jit[i*3+1];w.p[i*3+2]=p.z+jit[i*3+2]}
+    w.g.attributes.position.needsUpdate=true;
+    for(const d of drips){const u=(d.userData.t+t*.35)%1;d.position.set(6,2-u*6,1);d.scale.setScalar(1-u*.5)}}}
 
-// water: pre-sampled path, static jitter (no per-frame curve math / random)
-const S=800,samples=glassPath.getSpacedPoints(S-1),N=220;
-const pos=new Float32Array(N*3),off=new Float32Array(N),jit=new Float32Array(N*3);
-for(let i=0;i<N;i++){off[i]=Math.random();jit[i*3]=(Math.random()-.5)*.26;jit[i*3+1]=(Math.random()-.5)*.26;jit[i*3+2]=(Math.random()-.5)*.26}
-const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-rig.add(new THREE.Points(geo,new THREE.PointsMaterial({color:0x7fd8ff,size:.09,transparent:true,opacity:.9,blending:THREE.AdditiveBlending,depthWrite:false})));
-const dropGeo=new THREE.SphereGeometry(.09,12,12);
-const drips=Array.from({length:6},(_,i)=>{const d=new THREE.Mesh(dropGeo,waterMat);d.userData.t=i/6;rig.add(d);return d});
+/* 2 — glowing heat core inside orbiting ice shards + snowfall */
+function ice(){base.x=.2;base.y=-.2;
+  const core=new THREE.Mesh(new THREE.IcosahedronGeometry(1.1,4),new THREE.MeshStandardMaterial({color:0xffb070,emissive:0xff7a2a,emissiveIntensity:1.4,roughness:.4}));rig.add(core);
+  const glow=new THREE.Mesh(new THREE.SphereGeometry(1.7,32,32),new THREE.MeshBasicMaterial({color:0xff8a3a,transparent:true,opacity:.12,blending:THREE.AdditiveBlending,depthWrite:false}));rig.add(glow);
+  const iceMat=new THREE.MeshStandardMaterial({color:0xd8f3ff,metalness:.15,roughness:.06,transparent:true,opacity:.8,flatShading:true,envMapIntensity:2.6});
+  const shards=[];for(let i=0;i<16;i++){const s=new THREE.Mesh(new THREE.OctahedronGeometry(.35+Math.random()*.7,0),iceMat);s.scale.y=1.6+Math.random();
+    s.userData={r:2.6+Math.random()*2.4,a:Math.random()*6.28,sp:.15+Math.random()*.25,y:(Math.random()-.5)*3.5,spin:Math.random()*.02+.004};rig.add(s);shards.push(s)}
+  const ring=new THREE.Mesh(new THREE.TorusGeometry(3.4,.025,8,160),new THREE.MeshBasicMaterial({color:ACC,transparent:true,opacity:.6}));ring.rotation.x=1.25;rig.add(ring);
+  const ring2=ring.clone();ring2.scale.setScalar(1.35);ring2.rotation.x=1.05;ring2.rotation.y=.4;rig.add(ring2);
+  const N=380,snow=points(N,.06,0xe6f6ff,.85),vel=new Float32Array(N);
+  for(let i=0;i<N;i++){snow.p[i*3]=(Math.random()-.5)*16;snow.p[i*3+1]=(Math.random()-.5)*10;snow.p[i*3+2]=(Math.random()-.5)*8;vel[i]=.3+Math.random()*.6}rig.add(snow.m);
+  return (t,dt)=>{core.scale.setScalar(1+Math.sin(t*1.6)*.05);glow.scale.setScalar(1+Math.sin(t*1.6)*.12);
+    for(const s of shards){const u=s.userData;u.a+=u.sp*dt;s.position.set(Math.cos(u.a)*u.r,u.y+Math.sin(t*.8+u.r)*.3,Math.sin(u.a)*u.r);s.rotation.x+=u.spin;s.rotation.y+=u.spin*1.3}
+    ring.rotation.z=t*.2;ring2.rotation.z=-t*.15;
+    for(let i=0;i<N;i++){snow.p[i*3+1]-=vel[i]*dt;snow.p[i*3]+=Math.sin(t+i)*.002;if(snow.p[i*3+1]<-5)snow.p[i*3+1]=5}snow.g.attributes.position.needsUpdate=true}}
+
+/* 3 — boiler pressure gauge with swinging needle over a gas-flame burner */
+function boiler(){base.x=.1;base.y=-.45;
+  const g=new THREE.Group();g.position.y=.8;rig.add(g);
+  const rimM=metal(0xc07a43,.22),brass=metal(0xe0b070,.18);
+  g.add(new THREE.Mesh(new THREE.TorusGeometry(2.3,.22,24,96),rimM));
+  const back=new THREE.Mesh(new THREE.CylinderGeometry(2.3,2.3,.5,96),metal(0x2a2f38,.5));back.rotation.x=Math.PI/2;back.position.z=-.25;g.add(back);
+  const face=new THREE.Mesh(new THREE.CircleGeometry(2.15,96),new THREE.MeshStandardMaterial({color:0x0b0e13,roughness:.6}));face.position.z=.01;g.add(face);
+  const tickG=new THREE.BoxGeometry(.05,.28,.02),hot=new THREE.MeshBasicMaterial({color:0xff6a3d}),cool=new THREE.MeshBasicMaterial({color:0xe9edf3});
+  for(let i=0;i<=24;i++){const a=Math.PI*1.25-i*(Math.PI*1.5/24),m=new THREE.Mesh(tickG,i>18?hot:cool);m.position.set(Math.cos(a)*1.85,Math.sin(a)*1.85,.03);m.rotation.z=a-Math.PI/2;if(i%4)m.scale.set(.7,.6,1);g.add(m)}
+  const arc=new THREE.Mesh(new THREE.TorusGeometry(1.55,.035,8,96,Math.PI*1.5),new THREE.MeshBasicMaterial({color:ACC}));arc.rotation.z=-Math.PI*.25;arc.position.z=.03;g.add(arc);
+  const needle=new THREE.Group(),nm=new THREE.Mesh(new THREE.BoxGeometry(.07,1.7,.04),new THREE.MeshBasicMaterial({color:0xff5a36}));nm.position.y=.7;needle.add(nm);needle.position.z=.08;g.add(needle);
+  const cap=new THREE.Mesh(new THREE.SphereGeometry(.18,24,24),brass);cap.position.z=.1;g.add(cap);
+  const dome=new THREE.Mesh(new THREE.SphereGeometry(2.2,48,24,0,Math.PI*2,0,Math.PI*.18),new THREE.MeshStandardMaterial({color:0xffffff,metalness:0,roughness:.02,transparent:true,opacity:.12,envMapIntensity:3,depthWrite:false}));
+  dome.rotation.x=Math.PI/2;dome.position.z=-1.7;g.add(dome);
+  const boltG=new THREE.CylinderGeometry(.11,.11,.12,6);for(let i=0;i<8;i++){const a=i*Math.PI/4,b=new THREE.Mesh(boltG,brass);b.rotation.x=Math.PI/2;b.position.set(Math.cos(a)*2.3,Math.sin(a)*2.3,.22);g.add(b)}
+  const pipe=new THREE.Mesh(new THREE.CylinderGeometry(.18,.18,1.7,24),rimM);pipe.position.y=-2.35;rig.add(pipe);
+  const burner=new THREE.Mesh(new THREE.TorusGeometry(1.4,.12,16,64),metal(0x3a404a,.35));burner.rotation.x=Math.PI/2;burner.position.y=-3.2;rig.add(burner);
+  function flame(N,color,h,sz){const f=points(N,sz,color,.9),life=new Float32Array(N),ang=new Float32Array(N);for(let i=0;i<N;i++){life[i]=Math.random();ang[i]=Math.random()*6.28}rig.add(f.m);
+    return (t,dt)=>{for(let i=0;i<N;i++){life[i]+=dt*(.7+(i%7)*.06);if(life[i]>1){life[i]=0;ang[i]=Math.random()*6.28}const L=life[i],r=1.4*(1-L*.85);
+      f.p[i*3]=Math.cos(ang[i])*r+Math.sin(t*6+i)*.05*L;f.p[i*3+1]=-3.2+L*h;f.p[i*3+2]=Math.sin(ang[i])*r}f.g.attributes.position.needsUpdate=true}}
+  const fb=flame(200,0x3a8bff,.9,.11),fo=flame(260,0xff8a3a,2.0,.09);
+  return (t,dt)=>{needle.rotation.z=-.3-Math.sin(t*.6)*1.1+Math.sin(t*3.1)*.04;fb(t,dt);fo(t,dt);g.rotation.y=Math.sin(t*.4)*.15}}
+
+/* 4 — liquid-gold water surface with drops, ripples and floating marble tiles */
+function water(){base.x=.55;base.y=-.25;
+  const geo=new THREE.PlaneGeometry(16,12,96,72),pos=geo.attributes.position,N=pos.count,ox=new Float32Array(N),oy=new Float32Array(N);
+  for(let i=0;i<N;i++){ox[i]=pos.getX(i);oy[i]=pos.getY(i)}
+  const surf=new THREE.Mesh(geo,new THREE.MeshStandardMaterial({color:ACC.clone().multiplyScalar(.45),metalness:.95,roughness:.12,envMapIntensity:1.6}));surf.rotation.x=-Math.PI/2;surf.position.y=-2.2;rig.add(surf);
+  const tm=new THREE.MeshStandardMaterial({color:0xf4f1ea,roughness:.25,metalness:.05}),edge=metal(ACC.getHex(),.2),tiles=[];
+  for(let i=0;i<5;i++){const g=new THREE.Group();g.add(new THREE.Mesh(new THREE.BoxGeometry(1.6,1.6,.12),tm));const e=new THREE.Mesh(new THREE.BoxGeometry(1.7,1.7,.06),edge);e.position.z=-.06;g.add(e);
+    g.userData={y:.4+Math.random()*2.2,ph:Math.random()*6};g.position.set(-4+i*2+(Math.random()-.5),g.userData.y,-1+Math.random()*2);rig.add(g);tiles.push(g)}
+  const drop=new THREE.Mesh(new THREE.SphereGeometry(.14,24,24),new THREE.MeshStandardMaterial({color:0xdff3ff,metalness:.2,roughness:.02,envMapIntensity:3}));drop.scale.y=1.4;rig.add(drop);
+  const rip=[];let next=0,dx=0,dz=0;
+  return t=>{
+    if(t>next){dx=(Math.random()-.5)*6;dz=(Math.random()-.5)*4;next=t+2.6;rip.push({x:dx,z:dz,t0:t+.9});if(rip.length>3)rip.shift()}
+    const fall=1-(next-t)/2.6;drop.visible=fall<.35;drop.position.set(dx,4-Math.min(1,fall/.35)*6.2,dz);
+    for(let i=0;i<N;i++){const x=ox[i],y=oy[i];let h=Math.sin(x*.5+t*.8)*.08+Math.cos(y*.6+t*.6)*.08;
+      for(const r of rip){const age=t-r.t0;if(age<0)continue;const d=Math.hypot(x-r.x,y+r.z),front=age*2.4;
+        if(d<front)h+=Math.sin(d*3-age*7)*.32*Math.exp(-age*.55)*Math.exp(-d*.22)*Math.min(1,front-d)}
+      pos.setZ(i,h)}
+    pos.needsUpdate=true;geo.computeVertexNormals();
+    for(const g of tiles){const u=g.userData;g.position.y=u.y+Math.sin(t*.7+u.ph)*.25;g.rotation.set(Math.sin(t*.4+u.ph)*.5,t*.25+u.ph,Math.cos(t*.3+u.ph)*.3)}}}
+
+/* 5 — column radiator with a travelling heat glow and rising warm air */
+function radiator(){base.x=.15;base.y=-.5;
+  const n=11,fins=[];
+  for(let i=0;i<n;i++){const m=new THREE.MeshStandardMaterial({color:0xeef3f2,metalness:.55,roughness:.28,emissive:0xff7a30,emissiveIntensity:0});
+    const f=new THREE.Mesh(new THREE.CapsuleGeometry(.26,3.4,8,24),m);f.scale.z=1.9;f.position.x=(i-(n-1)/2)*.62;rig.add(f);fins.push(f)}
+  const chrome=metal(0xdfe6ec,.12);
+  [2.1,-2.1].forEach(y=>{const p=new THREE.Mesh(new THREE.CylinderGeometry(.13,.13,n*.62+.6,24),chrome);p.rotation.z=Math.PI/2;p.position.y=y;rig.add(p)});
+  const valve=new THREE.Group(),vb=new THREE.Mesh(new THREE.CylinderGeometry(.18,.18,.6,24),chrome);vb.rotation.z=Math.PI/2;valve.add(vb);
+  const cap=new THREE.Mesh(new THREE.CylinderGeometry(.28,.28,.35,32),new THREE.MeshStandardMaterial({color:ACC,metalness:.3,roughness:.35}));cap.position.y=.35;valve.add(cap);
+  valve.position.set(n*.31+.55,-2.1,0);rig.add(valve);
+  const down=new THREE.Mesh(new THREE.CylinderGeometry(.11,.11,2,16),chrome);down.position.set(n*.31+.55,-3.2,0);rig.add(down);
+  const N=420,heat=points(N,.08,ACC.getHex(),.75),M=160,warm=points(M,.1,0xffb36b,.6),d=new Float32Array(N);
+  const seed=(p,i)=>{p[i*3]=(Math.random()-.5)*n*.62;p[i*3+1]=2.4+Math.random()*4;p[i*3+2]=(Math.random()-.5)*1.2};
+  for(let i=0;i<N;i++){seed(heat.p,i);d[i]=.5+Math.random()}for(let i=0;i<M;i++)seed(warm.p,i);rig.add(heat.m);rig.add(warm.m);
+  const up=(P,cnt,sp,t,dt)=>{for(let i=0;i<cnt;i++){P.p[i*3+1]+=dt*sp*d[i];P.p[i*3]+=Math.sin(t*2+i)*.004;if(P.p[i*3+1]>6.5)P.p[i*3+1]=2.3}P.g.attributes.position.needsUpdate=true};
+  return (t,dt)=>{fins.forEach((f,i)=>{f.material.emissiveIntensity=.22*(.5+.5*Math.sin(t*2.2-i*.55))});cap.rotation.y=t;up(heat,N,1.1,t,dt);up(warm,M,.7,t,dt)}}
+
+/* 6 — ring spanner, turning bolt and orbiting hex nuts */
+function wrench(){base.x=.15;base.y=-.3;
+  const steel=metal(0xc9d2dc,.18),acc=new THREE.MeshStandardMaterial({color:ACC,metalness:.5,roughness:.3});
+  const ext={depth:.32,bevelEnabled:true,bevelThickness:.06,bevelSize:.06,bevelSegments:3,curveSegments:32};
+  const hexPath=r=>{const p=new THREE.Path();for(let i=0;i<=6;i++){const a=i*Math.PI/3+Math.PI/6;i?p.lineTo(Math.cos(a)*r,Math.sin(a)*r):p.moveTo(Math.cos(a)*r,Math.sin(a)*r)}return p};
+  const ringEnd=(R,h)=>{const s=new THREE.Shape();s.absarc(0,0,R,0,Math.PI*2,false);s.holes.push(hexPath(h));return new THREE.ExtrudeGeometry(s,ext)};
+  const W=new THREE.Group(),L=5,w=.36,hs=new THREE.Shape();hs.moveTo(-L/2,-w);hs.lineTo(L/2,-w*.8);hs.lineTo(L/2,w*.8);hs.lineTo(-L/2,w);hs.lineTo(-L/2,-w);
+  W.add(new THREE.Mesh(new THREE.ExtrudeGeometry(hs,ext),steel));
+  const e1=new THREE.Mesh(ringEnd(1.0,.55),steel);e1.position.x=-L/2-.55;W.add(e1);
+  const e2=new THREE.Mesh(ringEnd(.8,.42),steel);e2.position.x=L/2+.45;W.add(e2);
+  const grip=new THREE.Mesh(new THREE.BoxGeometry(2.2,.5,.46),acc);grip.position.z=.16;W.add(grip);W.position.z=-.16;
+  const wg=new THREE.Group();wg.add(W);wg.position.x=-.6;rig.add(wg);
+  const bolt=new THREE.Group();bolt.add(new THREE.Mesh(new THREE.CylinderGeometry(.75,.75,.5,6),steel));
+  const shaft=new THREE.Mesh(new THREE.CylinderGeometry(.38,.38,2.6,24),steel);shaft.position.y=-1.5;bolt.add(shaft);
+  const thG=new THREE.TorusGeometry(.4,.05,8,32);for(let i=0;i<11;i++){const th=new THREE.Mesh(thG,steel);th.rotation.x=Math.PI/2;th.position.y=-.5-i*.22;bolt.add(th)}
+  bolt.position.set(3,1.6,-1.5);bolt.rotation.z=-.4;rig.add(bolt);
+  const ns=new THREE.Shape();for(let i=0;i<=6;i++){const a=i*Math.PI/3;i?ns.lineTo(Math.cos(a)*.5,Math.sin(a)*.5):ns.moveTo(.5,0)}
+  const hole=new THREE.Path();hole.absarc(0,0,.24,0,Math.PI*2,true);ns.holes.push(hole);
+  const nutGeo=new THREE.ExtrudeGeometry(ns,{depth:.3,bevelEnabled:true,bevelThickness:.04,bevelSize:.04,bevelSegments:2});
+  const nuts=[];for(let i=0;i<9;i++){const m=new THREE.Mesh(nutGeo,i%3===0?acc:steel);m.userData={r:3.6+(i%3)*.8,a:i/9*6.28,sp:.25+(i%4)*.06,tilt:(i%3-1)*.35};rig.add(m);nuts.push(m)}
+  return t=>{wg.rotation.z=.35+Math.sin(t*.8)*.25;wg.rotation.y=Math.sin(t*.5)*.3;bolt.rotation.y=t*1.2;bolt.position.y=1.6+Math.sin(t*1.2)*.15;
+    for(const n of nuts){const u=n.userData,a=u.a+t*u.sp;n.position.set(Math.cos(a)*u.r,Math.sin(a)*u.r*.45+u.tilt*Math.cos(a)*2,Math.sin(a)*1.6-1);n.rotation.x=t*.9+u.a;n.rotation.y=t*.6}}}
+
+/* 7 — a house that builds itself brick by brick, with an access ramp */
+function house(){base.x=.35;base.y=-.6;
+  const cells=[];
+  for(let y=0;y<4;y++)for(let x=-3;x<=3;x++)for(let z=-2;z<=2;z++){if(!(x===-3||x===3||z===-2||z===2))continue;
+    if(z===2&&x===0&&y<2)continue;if(z===2&&Math.abs(x)===2&&y===2)continue;if(x===3&&z===0&&y===2)continue;cells.push([x,y,z])}
+  for(let k=0;k<4;k++)for(let x=-3+k;x<=3-k;x++)for(let z=-2;z<=2;z++)cells.push([x,4+k,z]);
+  const S=.5,im=new THREE.InstancedMesh(new THREE.BoxGeometry(S*.94,S*.94,S*.94),new THREE.MeshStandardMaterial({color:0xffffff,roughness:.35,metalness:.1}),cells.length);
+  const wallC=new THREE.Color(0xf2efff);cells.forEach((c,i)=>im.setColorAt(i,c[1]>=4?ACC:wallC));im.instanceColor.needsUpdate=true;
+  const order=cells.map((c,i)=>i).sort((a,b)=>cells[a][1]-cells[b][1]||cells[a][0]-cells[b][0]),delay=new Float32Array(cells.length);order.forEach((idx,k)=>delay[idx]=k*.035);
+  const dir=cells.map(()=>new THREE.Vector3(Math.random()-.5,Math.random()*.8+.2,Math.random()-.5).normalize());
+  const H=new THREE.Group();H.position.y=-1.6;rig.add(H);H.add(im);
+  const plinth=new THREE.Mesh(new THREE.BoxGeometry(S*7.6,S,S*5.6),new THREE.MeshStandardMaterial({color:0x2a3040,roughness:.6}));H.add(plinth);
+  const ramp=new THREE.Mesh(new THREE.BoxGeometry(S*1.4,S*.15,S*4.1),new THREE.MeshStandardMaterial({color:ACC,metalness:.3,roughness:.4}));ramp.position.set(0,0,S*4.8);ramp.rotation.x=.245;H.add(ramp);
+  const grid=new THREE.GridHelper(16,32,ACC,0x2a2f3d);grid.position.y=-S/2;grid.material.transparent=true;grid.material.opacity=.35;H.add(grid);
+  const blue=new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(S*7,S*4,S*5)),new THREE.LineBasicMaterial({color:ACC,transparent:true,opacity:.5}));blue.position.y=S*2.5;H.add(blue);
+  const m4=new THREE.Matrix4(),q=new THREE.Quaternion(),sc=new THREE.Vector3(),p=new THREE.Vector3(),e=new THREE.Euler(),ease=x=>1-Math.pow(1-x,3);
+  return t=>{const c=t%13;H.rotation.y=t*.15;
+    for(let i=0;i<cells.length;i++){const [x,y,z]=cells[i];p.set(x*S,(y+1)*S,z*S);let s=1;
+      if(c<8){const ek=ease(Math.min(1,Math.max(0,(c-delay[i])/.7)));p.y+=(1-ek)*6;s=ek;e.set((1-ek)*2,(1-ek)*3,0)}
+      else if(c>11){const k=(c-11)/2,ek=k*k;p.addScaledVector(dir[i],ek*7);s=1-k;e.set(ek*4,ek*5,0)}else e.set(0,0,0);
+      q.setFromEuler(e);sc.setScalar(Math.max(s,.001));m4.compose(p,q,sc);im.setMatrixAt(i,m4)}
+    im.instanceMatrix.needsUpdate=true}}
+
+const update=({pipes,ice,boiler,water,radiator,wrench,house})[SCENE]();
 
 let mx=0,my=0;
 if(matchMedia('(hover:hover)').matches)addEventListener('pointermove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5},{passive:true});
 function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();
-  const m=w<900;rig.position.set(m?0:2.8,m?-1.4:0,0);rig.scale.setScalar(m?.62:.9);canvas.style.opacity=m?'.5':''}
+  const m=w<900;if(m){rig.position.set(0,1.3,0);rig.scale.setScalar(.6)}else if(CENTER){const c=SCENE==='water'?[0,1.1,.8]:[0,2.1,.7];rig.position.set(c[0],c[1],0);rig.scale.setScalar(c[2])}else{rig.position.set(2.8,0,0);rig.scale.setScalar(.9)}
+  canvas.style.opacity=m?'.5':(CENTER?(SCENE==='water'?'.85':'.7'):'')}
 resize();addEventListener('resize',resize);
 
-// only render while the hero is on screen and the tab is visible
-let onScreen=true,running=false,raf=0;
+const clock=new THREE.Clock();let t=SCENE==='house'?6.2:0,onScreen=true,running=false,raf=0;
+function tick(){if(!running)return;const dt=Math.min(clock.getDelta(),.05);t+=dt;const sy=scrollY;
+  rig.rotation.y+=((mx*.6+base.y+sy*.0012)-rig.rotation.y)*.06;
+  rig.rotation.x+=((my*.4+base.x+sy*.0005)-rig.rotation.x)*.06;
+  update(t,dt);renderer.render(scene,camera);raf=requestAnimationFrame(tick)}
+function toggle(){const go=onScreen&&!document.hidden;if(go&&!running){running=true;clock.getDelta();raf=requestAnimationFrame(tick)}else if(!go&&running){running=false;cancelAnimationFrame(raf)}}
 new IntersectionObserver(([e])=>{onScreen=e.isIntersecting;toggle()},{threshold:0}).observe(hero);
 document.addEventListener('visibilitychange',toggle);
-function toggle(){const go=onScreen&&!document.hidden;if(go&&!running){running=true;clock.getDelta();raf=requestAnimationFrame(tick)}else if(!go&&running){running=false;cancelAnimationFrame(raf)}}
-
-const clock=new THREE.Clock();let t=0;
-function tick(){if(!running)return;t+=Math.min(clock.getDelta(),.05);
-  const sy=scrollY;
-  rig.rotation.y+=((mx*.6-.35+sy*.0012)-rig.rotation.y)*.06;
-  rig.rotation.x+=((my*.4+.12+sy*.0005)-rig.rotation.x)*.06;
-  wheel.rotation.z=t*.8;
-  for(let i=0;i<N;i++){const p=samples[Math.floor(((off[i]+t*.12)%1)*(S-1))];
-    pos[i*3]=p.x+jit[i*3];pos[i*3+1]=p.y+jit[i*3+1];pos[i*3+2]=p.z+jit[i*3+2]}
-  geo.attributes.position.needsUpdate=true;
-  for(const d of drips){const u=(d.userData.t+t*.35)%1;d.position.set(6,2-u*6,1);d.scale.setScalar(1-u*.5)}
-  renderer.render(scene,camera);raf=requestAnimationFrame(tick)}
-toggle();canvas.classList.add('ready');
+rig.rotation.set(base.x,base.y,0);toggle();canvas.classList.add('ready');
 </script>
 </body>
 </html>
