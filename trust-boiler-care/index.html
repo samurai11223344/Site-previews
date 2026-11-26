@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Trust Boiler Care Ltd — Cheadle, Stockport (Concept Preview)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://images.pexels.com">
+<link rel="preconnect" href="https://images.unsplash.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#07090d;--ink-2:#0d1118;--line:#1c2330;--text:#e9edf3;--muted:#8a94a6;--copper:#d98a4e;--copper-2:#f2b27a;--water:#5cc8ff}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--ink);color:var(--text);font-family:Inter,system-ui,sans-serif;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  img{display:block}
+  .serif{font-family:Fraunces,Georgia,serif}
+  .wrap{width:min(1180px,92vw);margin:0 auto}
+
+  .concept{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:60;background:rgba(13,17,24,.96);border:1px solid var(--line);padding:8px 16px;border-radius:999px;font-size:12px;color:var(--muted);white-space:nowrap}
+  .concept b{color:var(--copper-2);font-weight:600}
+
+  nav{position:fixed;top:0;left:0;right:0;z-index:50;transition:background .35s,border-color .35s;border-bottom:1px solid transparent}
+  nav.solid{background:rgba(7,9,13,.94);border-color:var(--line)}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between;height:72px}
+  .logo{font-weight:600;font-size:22px;letter-spacing:-.02em}
+  .logo span{color:var(--copper)}
+  .nav-links{display:flex;gap:32px;font-size:14px;color:var(--muted)}
+  .nav-links a{transition:color .2s}.nav-links a:hover{color:var(--text)}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:14px 24px;border-radius:999px;font-weight:600;font-size:15px;transition:transform .25s,box-shadow .25s,background .25s}
+  .btn-copper{background:linear-gradient(135deg,var(--copper),var(--copper-2));color:#1a0f06;box-shadow:0 10px 40px -10px rgba(217,138,78,.6)}
+  .btn-copper:hover{transform:translateY(-2px);box-shadow:0 18px 50px -10px rgba(217,138,78,.8)}
+  .btn-ghost{border:1px solid #2a3344}.btn-ghost:hover{background:#121823}
+
+  /* HERO */
+  .hero{position:relative;height:100vh;min-height:680px;display:flex;align-items:flex-end;overflow:hidden;contain:paint}
+  .hero-bg{position:absolute;inset:-5%;background:center/cover no-repeat;opacity:.38;will-change:transform;animation:kb 28s ease-in-out infinite alternate}
+  @keyframes kb{from{transform:scale(1.02)}to{transform:scale(1.13) translate(-2%,-1.5%)}}
+  .hero-tint{position:absolute;inset:0;background:linear-gradient(120deg,rgba(217,138,78,.18),rgba(7,9,13,.2) 40%,rgba(92,200,255,.12))}
+  .hero video,#three{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .hero video{opacity:0;transition:opacity 1.2s}.hero video.ready{opacity:.5}
+  #three{z-index:1;opacity:0;transition:opacity 1.6s}#three.ready{opacity:1}
+  .hero-shade{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(ellipse at 70% 35%,transparent 0%,rgba(7,9,13,.45) 55%,var(--ink) 100%),linear-gradient(to top,var(--ink) 2%,transparent 45%)}
+  .hero-inner{position:relative;z-index:2;padding-bottom:12vh}
+  .eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--copper-2);margin-bottom:24px}
+  .eyebrow i{width:36px;height:1px;background:var(--copper)}
+  h1{font-size:clamp(48px,8.4vw,128px);line-height:.92;font-weight:300;letter-spacing:-.035em;max-width:12ch}
+  h1 em{font-style:italic;font-weight:600;background:linear-gradient(90deg,var(--copper-2),var(--water));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hero p.lead{margin:28px 0 40px;font-size:clamp(17px,1.5vw,20px);color:#c3cbd8;max-width:46ch}
+  .ctas{display:flex;gap:14px;flex-wrap:wrap}
+  .scroll-cue{position:absolute;right:4vw;bottom:12vh;z-index:2;writing-mode:vertical-rl;font-size:11px;letter-spacing:.3em;color:var(--muted);text-transform:uppercase}
+  .scroll-cue::after{content:"";display:block;width:1px;height:70px;margin:14px auto 0;background:linear-gradient(var(--copper),transparent);transform-origin:top;animation:drip 2.2s infinite}
+  @keyframes drip{0%{transform:scaleY(0)}50%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
+
+  .stats{border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--ink-2)}
+  .stats .wrap{display:grid;grid-template-columns:repeat(4,1fr)}
+  .stat{padding:40px 24px;border-right:1px solid var(--line)}.stat:last-child{border-right:0}
+  .stat b{display:block;font-family:Fraunces,serif;font-size:clamp(36px,4vw,56px);font-weight:600;letter-spacing:-.03em}
+  .stat span{font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.12em}
+
+  section{padding:140px 0}
+  .sec-head{display:flex;justify-content:space-between;align-items:end;gap:40px;margin-bottom:64px;flex-wrap:wrap}
+  h2{font-size:clamp(38px,5vw,72px);line-height:1;font-weight:300;letter-spacing:-.03em;max-width:14ch}
+  h2 em{font-style:italic;color:var(--copper-2);font-weight:600}
+  .sec-head p{color:var(--muted);max-width:40ch}
+
+  /* SERVICES */
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .card{background:var(--ink-2);border:1px solid var(--line);border-radius:22px;overflow:hidden;position:relative;display:flex;flex-direction:column;transition:border-color .4s,transform .4s}
+  .card:hover{border-color:#3a2a1e;transform:translateY(-4px)}
+  .card .img{height:200px;overflow:hidden;position:relative;background:#0f141c}
+  .card .img img{width:100%;height:100%;object-fit:cover;transform:scale(1.03);transition:transform 1.1s cubic-bezier(.2,.7,.2,1),opacity .6s;opacity:.85}
+  .card:hover .img img{transform:scale(1.12);opacity:1}
+  .card .img::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,var(--ink-2) 0%,transparent 55%)}
+  .card .body{padding:8px 32px 36px;position:relative}
+  .card .num{font-size:12px;color:var(--copper-2);letter-spacing:.2em}
+  .card h3{font-family:Fraunces,serif;font-size:26px;font-weight:600;letter-spacing:-.01em;margin:6px 0 8px}
+  .card p{color:var(--muted);font-size:15px}
+
+  .marquee{padding:56px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;white-space:nowrap}
+  .track{display:inline-flex;gap:56px;will-change:transform;animation:slide 34s linear infinite;font-family:Fraunces,serif;font-size:clamp(32px,4vw,56px);font-weight:300;color:#3a4558}
+  .track span:nth-child(odd){color:var(--text)}.track i{color:var(--copper);font-style:normal}
+  @keyframes slide{to{transform:translateX(-50%)}}
+
+  /* 3D GALLERY */
+  .gallery{height:360vh;position:relative;padding:0}
+  .g-sticky{position:sticky;top:0;height:100vh;padding-top:72px;overflow:hidden;display:flex;flex-direction:column;justify-content:center;perspective:1400px}
+  .g-head{width:min(1180px,92vw);margin:0 auto 44px;display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap}
+  .g-track{display:flex;gap:40px;will-change:transform;transform-style:preserve-3d}
+  .g-item{flex:none;width:min(420px,76vw);aspect-ratio:4/5;border-radius:26px;overflow:hidden;position:relative;border:1px solid var(--line);background:#0f141c;will-change:transform;backface-visibility:hidden}
+  .g-item img{width:118%;height:100%;object-fit:cover;margin-left:-9%;will-change:transform}
+  .g-item figcaption{position:absolute;left:0;right:0;bottom:0;padding:28px;background:linear-gradient(to top,rgba(7,9,13,.95),transparent);font-family:Fraunces,serif;font-size:24px}
+  .g-item figcaption small{display:block;font-family:Inter,sans-serif;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-2);margin-bottom:6px}
+  .g-bar{width:min(1180px,92vw);margin:44px auto 0;height:2px;background:var(--line);border-radius:2px;overflow:hidden}
+  .g-bar i{display:block;height:100%;width:100%;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg,var(--copper),var(--water))}
+  .stock-note{font-size:12px;color:#5b6577}
+
+  /* IMAGE BAND */
+  .band{position:relative;height:78vh;min-height:520px;overflow:hidden;display:flex;align-items:center;padding:0;contain:paint}
+  .band img{position:absolute;left:0;top:-12%;width:100%;height:124%;object-fit:cover;will-change:transform}
+  .band::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(7,9,13,.92) 0%,rgba(7,9,13,.55) 50%,rgba(7,9,13,.15) 100%)}
+  .band .wrap{position:relative;z-index:1}
+  .band h2{max-width:13ch;margin-bottom:32px}
+
+  /* REVIEWS */
+  .reviews{background:var(--ink-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .stars{color:var(--copper-2);letter-spacing:4px;font-size:18px}
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .quote{border:1px solid var(--line);border-radius:20px;padding:36px;background:var(--ink)}
+  .quote blockquote{font-family:Fraunces,serif;font-size:24px;line-height:1.3;font-weight:300;margin:20px 0 24px}
+  .quote cite{font-style:normal;font-size:13px;color:var(--muted)}
+  .g-badge{display:inline-flex;align-items:center;gap:14px;border:1px solid var(--line);border-radius:999px;padding:12px 22px;background:var(--ink)}
+  .g-badge b{font-family:Fraunces,serif;font-size:28px}
+  .tilt{transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+
+  /* ABOUT */
+  .about .wrap{display:grid;grid-template-columns:1fr 1.1fr;gap:80px;align-items:center}
+  .photo{aspect-ratio:4/5;border-radius:28px;border:1px dashed #2f3a4d;background:radial-gradient(circle at 30% 20%,rgba(217,138,78,.14),transparent 50%),linear-gradient(160deg,#121925,#0a0d13);display:grid;place-items:center;text-align:center;color:var(--muted);font-size:14px}
+  .about p{color:#b8c1d1;font-size:18px;margin-top:28px}
+  .ticks{margin-top:36px;display:grid;gap:14px}
+  .ticks li{list-style:none;display:flex;gap:14px;align-items:center;font-size:16px}
+  .ticks li::before{content:"";width:22px;height:22px;flex:none;border-radius:50%;background:rgba(217,138,78,.15) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f2b27a' stroke-width='3'%3E%3Cpath d='M5 12l5 5L20 7'/%3E%3C/svg%3E") center/12px no-repeat}
+
+  /* CONTACT */
+  .contact .box{border:1px solid var(--line);border-radius:32px;padding:clamp(40px,6vw,88px);background:radial-gradient(800px circle at 100% 0%,rgba(217,138,78,.14),transparent 50%),radial-gradient(600px circle at 0% 100%,rgba(92,200,255,.08),transparent 50%),var(--ink-2);display:grid;grid-template-columns:1.1fr 1fr;gap:64px}
+  .phone{font-family:Fraunces,serif;font-size:clamp(34px,4vw,54px);font-weight:600;letter-spacing:-.02em;display:block;margin:28px 0 12px;color:var(--copper-2)}
+  form{display:grid;gap:14px}
+  input,textarea,select{width:100%;background:var(--ink);border:1px solid var(--line);border-radius:14px;padding:16px 18px;color:var(--text);font:inherit;font-size:15px;outline:none;transition:border-color .2s}
+  input:focus,textarea:focus,select:focus{border-color:var(--copper)}
+  textarea{min-height:120px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .sent{display:none;color:var(--copper-2);font-size:14px}
+  footer{padding:48px 0 100px;color:var(--muted);font-size:13px}
+  footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+  .reveal{opacity:0;transform:translateY(36px);transition:opacity .9s cubic-bezier(.2,.7,.2,1),transform .9s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+  .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}
+  .split .w{display:inline-block;overflow:hidden;vertical-align:bottom;padding-bottom:.08em;margin-bottom:-.08em}
+  .split .w>span{display:inline-block;transform:translateY(110%);transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+  .split.in .w>span{transform:none}
+
+  @media (max-width:900px){
+    .nav-links{display:none}
+    .stats .wrap{grid-template-columns:1fr 1fr}
+    .stat:nth-child(2){border-right:0}.stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+    .grid,.quotes{grid-template-columns:1fr}
+    .about .wrap,.contact .box{grid-template-columns:1fr;gap:48px}
+    section{padding:96px 0}
+    .scroll-cue{display:none}.row{grid-template-columns:1fr}
+    .gallery{height:300vh}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.reveal,.split .w>span{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+
+<div class="concept"><b>Concept preview</b> designed for Trust Boiler Care Ltd · not an official website</div>
+
+<nav id="nav"><div class="wrap">
+  <a href="#top" class="logo serif">Trust<span>.</span> Boiler Care</a>
+  <div class="nav-links"><a href="#services">Services</a><a href="#work">Work</a><a href="#reviews">Reviews</a><a href="#about">About</a><a href="#contact">Contact</a></div>
+  <a href="tel:+447984018474" class="btn btn-copper" style="padding:11px 20px;font-size:14px">Call Adrian</a>
+</div></nav>
+
+<header class="hero" id="top">
+  <div class="hero-bg" style="background-image:url('https://images.pexels.com/photos/6419128/pexels-photo-6419128.jpeg?auto=compress&cs=tinysrgb&w=1920')"></div>
+  <div class="hero-tint"></div>
+  <!-- Optional: put a free Pexels/Mixkit clip next to this file as hero.mp4 -->
+  <video id="heroVid" autoplay muted loop playsinline preload="metadata"><source src="hero.mp4" type="video/mp4"></video>
+  <canvas id="three"></canvas>
+  <div class="hero-shade"></div>
+  <div class="wrap hero-inner">
+    <div class="eyebrow reveal"><i></i>Cheadle · Stockport</div>
+    <h1 class="serif split">Boilers you can <em>trust.</em></h1>
+    <p class="lead reveal d2">Plumbing, gas fitting and heating from a Cheadle engineer with over 25 years in the trade — and a perfect 5.0 from 107 verified Which? reviews.</p>
+    <div class="ctas reveal d3">
+      <a href="tel:+447984018474" class="btn btn-copper"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>07984 018474</a>
+      <a href="#contact" class="btn btn-ghost">Get a free quote →</a>
+    </div>
+  </div>
+  <div class="scroll-cue">Scroll</div>
+</header>
+
+<div class="stats"><div class="wrap">
+  <div class="stat reveal"><b data-count="5.0" data-dec="1">5.0</b><span>Which? rating</span></div>
+  <div class="stat reveal d1"><b data-count="107">107</b><span>Verified reviews</span></div>
+  <div class="stat reveal d2"><b>25+</b><span>Years experience</span></div>
+  <div class="stat reveal d3"><b>Gas</b><span>Safe engineers</span></div>
+</div></div>
+
+<section id="services"><div class="wrap">
+  <div class="sec-head">
+    <h2 class="serif split">Heating, gas &amp; <em>plumbing.</em></h2>
+    <p class="reveal">Everything your boiler and pipes need — serviced, repaired or replaced, at prices customers call reasonable.</p>
+  </div>
+  <div class="grid">
+    <article class="card reveal"><div class="img"><img loading="lazy" decoding="async" src="https://images.pexels.com/photos/16509869/pexels-photo-16509869.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Boiler Servicing"></div>
+      <div class="body"><span class="num">01</span><h3>Boiler Servicing</h3><p>Annual services that keep your boiler safe, efficient and under warranty.</p></div></article>
+    <article class="card reveal d1"><div class="img"><img loading="lazy" decoding="async" src="https://images.pexels.com/photos/6419128/pexels-photo-6419128.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Boiler Installation"></div>
+      <div class="body"><span class="num">02</span><h3>Boiler Installation</h3><p>New boilers, filters and smart thermostats fitted with care.</p></div></article>
+    <article class="card reveal d2"><div class="img"><img loading="lazy" decoding="async" src="https://images.pexels.com/photos/29226620/pexels-photo-29226620.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Power Flushing"></div>
+      <div class="body"><span class="num">03</span><h3>Power Flushing</h3><p>Sludge cleared from your system so radiators heat up evenly again.</p></div></article>
+    <article class="card reveal"><div class="img"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1495647688236-ed6ef40cb28b?auto=format&fit=crop&w=800&q=70" alt="Plumbing Repairs"></div>
+      <div class="body"><span class="num">04</span><h3>Plumbing Repairs</h3><p>Leaks, taps and pipework fixed by an engineer who's seen it all.</p></div></article>
+    <article class="card reveal d1"><div class="img"><img loading="lazy" decoding="async" src="https://images.pexels.com/photos/3741317/pexels-photo-3741317.jpeg?auto=compress&cs=tinysrgb&w=800" alt="Gas Safety Checks"></div>
+      <div class="body"><span class="num">05</span><h3>Gas Safety Checks</h3><p>CP12 certificates for landlords, and safety checks for homeowners.</p></div></article>
+    <article class="card reveal d2"><div class="img"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1646592491820-49bafd614c0e?auto=format&fit=crop&w=800&q=70" alt="Central Heating"></div>
+      <div class="body"><span class="num">06</span><h3>Central Heating</h3><p>Radiators and full central heating systems, installed and repaired.</p></div></article>
+  </div>
+</div></section>
+
+<div class="marquee" aria-hidden="true"><div class="track">
+  <span>Cheadle</span><i>✦</i><span>Cheadle Hulme</span><i>✦</i><span>Gatley</span><i>✦</i><span>Heald Green</span><i>✦</i><span>Stockport</span><i>✦</i><span>Didsbury</span><i>✦</i>
+  <span>Cheadle</span><i>✦</i><span>Cheadle Hulme</span><i>✦</i><span>Gatley</span><i>✦</i><span>Heald Green</span><i>✦</i><span>Stockport</span><i>✦</i><span>Didsbury</span><i>✦</i>
+</div></div>
+
+<section class="gallery" id="work"><div class="g-sticky">
+  <div class="g-head">
+    <h2 class="serif split">The work, <em>up close.</em></h2>
+    <span class="stock-note reveal">Preview imagery · Adrian's real job photos go here</span>
+  </div>
+  <div class="g-track" id="gTrack">
+    <figure class="g-item"><img loading="lazy" decoding="async" src="https://images.pexels.com/photos/29226620/pexels-photo-29226620.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Radiator pipework"><figcaption><small>Heating</small>Radiator pipework</figcaption></figure>
+    <figure class="g-item"><img loading="lazy" decoding="async" src="https://images.pexels.com/photos/8142977/pexels-photo-8142977.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Marble bathroom"><figcaption><small>Bathrooms</small>Full bathroom fits</figcaption></figure>
+    <figure class="g-item"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1495647688236-ed6ef40cb28b?auto=format&fit=crop&w=900&q=70" alt="Dripping tap"><figcaption><small>Repairs</small>Drips stopped for good</figcaption></figure>
+    <figure class="g-item"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1682888818704-6dc91e9d7532?auto=format&fit=crop&w=900&q=70" alt="Green cabinets and marble shower"><figcaption><small>Finishing</small>Clean, tidy, done</figcaption></figure>
+    <figure class="g-item"><img loading="lazy" decoding="async" src="https://images.pexels.com/photos/16509869/pexels-photo-16509869.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Spanner on pipe fitting"><figcaption><small>Repairs</small>Leaks fixed fast</figcaption></figure>
+    <figure class="g-item"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1613849925594-415a32298f54?auto=format&fit=crop&w=900&q=70" alt="White freestanding bathtub"><figcaption><small>Bathrooms</small>Baths &amp; fittings</figcaption></figure>
+    <figure class="g-item"><img loading="lazy" decoding="async" src="https://images.pexels.com/photos/7031865/pexels-photo-7031865.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Glass shower and tiles"><figcaption><small>Showers</small>Showers &amp; tiling</figcaption></figure>
+    <figure class="g-item"><img loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1557074310-7116e1117372?auto=format&fit=crop&w=900&q=70" alt="Stainless tap"><figcaption><small>Taps</small>Mixers &amp; valves</figcaption></figure>
+    <figure class="g-item"><img loading="lazy" decoding="async" src="https://images.pexels.com/photos/6419128/pexels-photo-6419128.jpeg?auto=compress&cs=tinysrgb&w=900" alt="Hands fitting pipework"><figcaption><small>Pipework</small>Done properly</figcaption></figure>
+  </div>
+  <div class="g-bar"><i id="gBar"></i></div>
+</div></section>
+
+<section class="reviews" id="reviews"><div class="wrap">
+  <div class="sec-head">
+    <h2 class="serif split">107 reviews. <em>All five stars.</em></h2>
+    <div class="g-badge tilt reveal"><b>5.0</b><div><div class="stars">★★★★★</div><span style="font-size:12px;color:var(--muted)">Which? verified reviews</span></div></div>
+  </div>
+  <div class="quotes">
+    <div class="quote tilt reveal"><div class="stars">★★★★★</div><blockquote>“Communication is great, Adrian is very responsive.”</blockquote><cite>Checkatrade review · boiler replacement</cite></div>
+    <div class="quote tilt reveal d1"><div class="stars">★★★★★</div><blockquote>“An extremely professional and courteous man.”</blockquote><cite>Which? review · boiler service</cite></div>
+    <div class="quote tilt reveal d2"><div class="stars">★★★★★</div><blockquote>“Ade has been doing my plumbing and gas for over 20 years.”</blockquote><cite>Checkatrade review</cite></div>
+  </div>
+</div></section>
+
+<section class="band" id="band">
+  <img id="bandImg" loading="lazy" decoding="async" src="https://images.unsplash.com/photo-1665668490611-82e5e6162354?auto=format&fit=crop&w=1920&q=70" alt="A drop of water falling into a glass">
+  <div class="wrap">
+    <h2 class="serif split">Boiler <em>playing up?</em></h2>
+    <a href="tel:+447984018474" class="btn btn-copper reveal">Call Adrian now · 07984 018474</a>
+  </div>
+</section>
+
+<section class="about" id="about"><div class="wrap">
+  <div class="photo tilt reveal">Adrian's photo<br>goes here</div>
+  <div>
+    <div class="eyebrow reveal"><i></i>Meet your engineer</div>
+    <h2 class="serif split">25 years. <em>One</em> standard.</h2>
+    <p class="reveal">Trust Boiler Care is Adrian and his team, based in Cheadle. With over 25 years specialising in plumbing, gas fitting and heating, every job is finished to the highest standard — which is why customers keep coming back for decades.</p>
+    <ul class="ticks reveal d1">
+      <li>Over 25 years in the trade</li>
+      <li>Responsive, clear communication</li>
+      <li>Reasonable, upfront prices</li>
+      <li>Which? Trusted Trader</li>
+    </ul>
+  </div>
+</div></section>
+
+<section class="contact" id="contact"><div class="wrap"><div class="box">
+  <div>
+    <div class="eyebrow reveal"><i></i>Get in touch</div>
+    <h2 class="serif split">Need a hand? <em>Ask Adrian.</em></h2>
+    <a href="tel:+447984018474" class="phone reveal">07984 018474</a>
+    <p class="reveal" style="color:var(--muted)">Call or send the form and Adrian will get back to you with an honest quote.</p>
+  </div>
+  <form class="reveal d1" onsubmit="event.preventDefault();this.querySelector('.sent').style.display='block';this.reset()">
+    <div class="row"><input placeholder="Your name" required><input placeholder="Phone" type="tel" required></div>
+    <div class="row"><input placeholder="Postcode"><select><option>Type of job</option><option>Boiler service</option><option>Boiler repair</option><option>New boiler</option><option>Power flush</option><option>Gas safety certificate</option></select></div>
+    <textarea placeholder="Tell us what's going on…"></textarea>
+    <button class="btn btn-copper" style="justify-content:center;border:0;cursor:pointer">Request a free quote</button>
+    <span class="sent">Thanks — this is a preview, so nothing was sent.</span>
+  </form>
+</div></div></section>
+
+<footer><div class="wrap"><span>© Trust Boiler Care Ltd · Cheadle, Stockport</span><span>Concept website preview · Images: Pexels, Unsplash, Pixabay</span></div></footer>
+
+<script>
+// hide any image that fails to load
+document.querySelectorAll('img').forEach(i=>i.addEventListener('error',()=>{i.style.visibility='hidden'}));
+
+// split headings into words
+document.querySelectorAll('.split').forEach(el=>{
+  const walk=n=>{[...n.childNodes].forEach(c=>{
+    if(c.nodeType===3){const f=document.createDocumentFragment();
+      c.textContent.split(/(\s+)/).forEach(t=>{if(!t)return;if(/^\s+$/.test(t)){f.append(t);return}
+        const w=document.createElement('span');w.className='w';const i=document.createElement('span');i.textContent=t;w.append(i);f.append(w)});
+      c.replaceWith(f)}else if(c.nodeType===1)walk(c)})};
+  walk(el);el.querySelectorAll('.w>span').forEach((s,i)=>s.style.transitionDelay=(i*.06)+'s');
+});
+
+// reveal + counters
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;e.target.classList.add('in');
+  e.target.querySelectorAll('[data-count]').forEach(b=>{const end=+b.dataset.count,dec=+(b.dataset.dec||0),t0=performance.now();
+    const tick=t=>{const p=Math.min(1,(t-t0)/1600);b.textContent=(end*(1-Math.pow(1-p,3))).toFixed(dec);if(p<1)requestAnimationFrame(tick)};requestAnimationFrame(tick)});
+  io.unobserve(e.target)}),{threshold:.15,rootMargin:'0px 0px -5% 0px'});
+document.querySelectorAll('.reveal,.split').forEach(el=>io.observe(el));
+requestAnimationFrame(()=>document.querySelectorAll('.hero .reveal,.hero .split').forEach(el=>el.classList.add('in')));
+
+// hero video (optional)
+const v=document.getElementById('heroVid');v.addEventListener('canplay',()=>v.classList.add('ready'));
+
+// ===== one scroll loop for everything (no layout reads per frame) =====
+const nav=document.getElementById('nav');
+const gal=document.getElementById('work'),track=document.getElementById('gTrack'),bar=document.getElementById('gBar');
+const items=[...track.children],itemImgs=items.map(i=>i.querySelector('img'));
+const band=document.getElementById('band'),bandImg=document.getElementById('bandImg');
+let G={},B={},vw=innerWidth,vh=innerHeight,navSolid=false,ticking=false;
+function measure(){vw=innerWidth;vh=innerHeight;
+  const w=items[0].offsetWidth,gap=40,pl=Math.max(vw*.04,(vw-1180)/2);
+  track.style.paddingLeft=pl+'px';
+  const tw=pl+items.length*w+(items.length-1)*gap;
+  G={top:gal.offsetTop,h:gal.offsetHeight-vh,w,gap,pl,max:Math.max(0,tw-vw+vw*.06)};
+  B={top:band.offsetTop,h:band.offsetHeight};
+  update()}
+function update(){ticking=false;const y=scrollY;
+  const s=y>40;if(s!==navSolid){navSolid=s;nav.classList.toggle('solid',s)}
+  // gallery
+  if(y>G.top-vh&&y<G.top+G.h+vh){
+    const p=Math.min(1,Math.max(0,(y-G.top)/G.h)),tx=-p*G.max,cx=vw/2;
+    track.style.transform=`translate3d(${tx}px,0,0)`;bar.style.transform=`scaleX(${p})`;
+    for(let i=0;i<items.length;i++){const c=G.pl+i*(G.w+G.gap)+G.w/2+tx,d=Math.max(-1.2,Math.min(1.2,(c-cx)/vw)),a=Math.abs(d);
+      items[i].style.transform=`rotateY(${d*-34}deg) translateZ(${-a*200}px) scale(${1-a*.07})`;
+      itemImgs[i].style.transform=`translate3d(${d*-36}px,0,0)`}}
+  // image band parallax
+  if(y>B.top-vh&&y<B.top+B.h){const p=(y+vh-B.top)/(vh+B.h);bandImg.style.transform=`translate3d(0,${(p-.5)*-14}%,0) scale(1.02)`}
+}
+addEventListener('scroll',()=>{if(!ticking){ticking=true;requestAnimationFrame(update)}},{passive:true});
+addEventListener('resize',()=>requestAnimationFrame(measure));
+addEventListener('load',measure);measure();
+
+// 3D tilt (hover only, desktop)
+if(matchMedia('(hover:hover)').matches)document.querySelectorAll('.tilt').forEach(el=>{
+  el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+    el.style.transform=`perspective(900px) rotateY(${x*9}deg) rotateX(${-y*9}deg)`});
+  el.addEventListener('pointerleave',()=>el.style.transform='')});
+</script>
+
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
+
+const canvas=document.getElementById('three'),hero=document.getElementById('top');
+const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:true,powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
+const scene=new THREE.Scene();
+const pmrem=new THREE.PMREMGenerator(renderer);
+scene.environment=pmrem.fromScene(new RoomEnvironment(),.04).texture;pmrem.dispose();
+const camera=new THREE.PerspectiveCamera(35,1,.1,100);camera.position.set(0,0,14);
+const key=new THREE.DirectionalLight(0xffd2a8,2.2);key.position.set(5,6,6);scene.add(key);
+const rim=new THREE.PointLight(0x5cc8ff,40,30);rim.position.set(-6,-2,4);scene.add(rim);
+
+const copper=new THREE.MeshStandardMaterial({color:0xc07a43,metalness:1,roughness:.24});
+const brass=new THREE.MeshStandardMaterial({color:0xe0b070,metalness:1,roughness:.18});
+const glass=new THREE.MeshStandardMaterial({color:0x9fdcff,metalness:.2,roughness:.05,transparent:true,opacity:.22,depthWrite:false,envMapIntensity:2});
+const waterMat=new THREE.MeshStandardMaterial({color:0xa8e4ff,metalness:.1,roughness:.05,transparent:true,opacity:.85,envMapIntensity:2});
+
+const rig=new THREE.Group();scene.add(rig);
+const V=(x,y,z)=>new THREE.Vector3(x,y,z);
+function run(pts,r,mat,bend=.6){
+  const path=new THREE.CurvePath();
+  for(let i=0;i<pts.length-1;i++){const a=pts[i],b=pts[i+1];
+    const s=i===0?a:a.clone().lerp(b,bend/a.distanceTo(b));
+    const e=i===pts.length-2?b:b.clone().lerp(a,bend/a.distanceTo(b));
+    path.add(new THREE.LineCurve3(s,e));
+    if(i<pts.length-2){const n=pts[i+2];path.add(new THREE.QuadraticBezierCurve3(e,b,b.clone().lerp(n,bend/b.distanceTo(n))))}}
+  rig.add(new THREE.Mesh(new THREE.TubeGeometry(path,220,r,20,false),mat));
+  const cg=new THREE.CylinderGeometry(r*1.45,r*1.45,r*2.4,24);
+  [[pts[0],pts[1]],[pts[pts.length-1],pts[pts.length-2]]].forEach(([p,q])=>{const c=new THREE.Mesh(cg,brass);
+    c.position.copy(p);c.quaternion.setFromUnitVectors(V(0,1,0),q.clone().sub(p).normalize());rig.add(c)});
+  return path}
+[[V(-6,-3,0),V(-2,-3,0),V(-2,1,0),V(2,1,0),V(2,4,-1)],
+ [V(-5,3,-2),V(-1,3,-2),V(-1,-1,-2),V(3,-1,-2),V(3,-4,-2)],
+ [V(0,-5,1),V(0,-2,1),V(4,-2,1),V(4,2,1),V(6,2,1)]].forEach((p,i)=>run(p,i===1?.22:.3,copper));
+const glassPath=run([V(-4,0,2),V(1,0,2),V(1,3,2),V(5,3,2)],.34,glass);
+
+const wheel=new THREE.Group();
+wheel.add(new THREE.Mesh(new THREE.TorusGeometry(.7,.08,16,48),new THREE.MeshStandardMaterial({color:0xb3261e,metalness:.6,roughness:.35})));
+const spoke=new THREE.CylinderGeometry(.05,.05,1.4,10);
+for(let i=0;i<4;i++){const s=new THREE.Mesh(spoke,brass);s.rotation.z=i*Math.PI/4;wheel.add(s)}
+wheel.position.set(-2,-1,.6);rig.add(wheel);
+
+// water: pre-sampled path, static jitter (no per-frame curve math / random)
+const S=800,samples=glassPath.getSpacedPoints(S-1),N=220;
+const pos=new Float32Array(N*3),off=new Float32Array(N),jit=new Float32Array(N*3);
+for(let i=0;i<N;i++){off[i]=Math.random();jit[i*3]=(Math.random()-.5)*.26;jit[i*3+1]=(Math.random()-.5)*.26;jit[i*3+2]=(Math.random()-.5)*.26}
+const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+rig.add(new THREE.Points(geo,new THREE.PointsMaterial({color:0x7fd8ff,size:.09,transparent:true,opacity:.9,blending:THREE.AdditiveBlending,depthWrite:false})));
+const dropGeo=new THREE.SphereGeometry(.09,12,12);
+const drips=Array.from({length:6},(_,i)=>{const d=new THREE.Mesh(dropGeo,waterMat);d.userData.t=i/6;rig.add(d);return d});
+
+let mx=0,my=0;
+if(matchMedia('(hover:hover)').matches)addEventListener('pointermove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5},{passive:true});
+function resize(){const w=canvas.clientWidth,h=canvas.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix();
+  const m=w<900;rig.position.set(m?0:2.8,m?-1.4:0,0);rig.scale.setScalar(m?.62:.9);canvas.style.opacity=m?'.5':''}
+resize();addEventListener('resize',resize);
+
+// only render while the hero is on screen and the tab is visible
+let onScreen=true,running=false,raf=0;
+new IntersectionObserver(([e])=>{onScreen=e.isIntersecting;toggle()},{threshold:0}).observe(hero);
+document.addEventListener('visibilitychange',toggle);
+function toggle(){const go=onScreen&&!document.hidden;if(go&&!running){running=true;clock.getDelta();raf=requestAnimationFrame(tick)}else if(!go&&running){running=false;cancelAnimationFrame(raf)}}
+
+const clock=new THREE.Clock();let t=0;
+function tick(){if(!running)return;t+=Math.min(clock.getDelta(),.05);
+  const sy=scrollY;
+  rig.rotation.y+=((mx*.6-.35+sy*.0012)-rig.rotation.y)*.06;
+  rig.rotation.x+=((my*.4+.12+sy*.0005)-rig.rotation.x)*.06;
+  wheel.rotation.z=t*.8;
+  for(let i=0;i<N;i++){const p=samples[Math.floor(((off[i]+t*.12)%1)*(S-1))];
+    pos[i*3]=p.x+jit[i*3];pos[i*3+1]=p.y+jit[i*3+1];pos[i*3+2]=p.z+jit[i*3+2]}
+  geo.attributes.position.needsUpdate=true;
+  for(const d of drips){const u=(d.userData.t+t*.35)%1;d.position.set(6,2-u*6,1);d.scale.setScalar(1-u*.5)}
+  renderer.render(scene,camera);raf=requestAnimationFrame(tick)}
+toggle();canvas.classList.add('ready');
+</script>
+</body>
+</html>
